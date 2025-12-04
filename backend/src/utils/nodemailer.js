@@ -4,8 +4,9 @@ async function sendResetEmail(to, resetUrl){
     // create transporter using env vars
     const transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST || 'smtp.gmail.com',
-        port: process.env.SMTP_PORT ? Number(process.env.SMTP_PORT) : 465,
-        secure: process.env.SMTP_SECURE ? process.env.SMTP_SECURE === 'true' : true,
+        port: Number(process.env.SMTP_PORT) || 587,
+        secure: process.env.SMTP_SECURE === 'true' ? true : false,
+    
         auth: {
             user: process.env.SMTP_USER,
             pass: process.env.SMTP_PASS
