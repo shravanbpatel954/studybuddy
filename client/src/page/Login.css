@@ -1,0 +1,257 @@
+/* ---------------- Base Style (Desktop) ---------------- */
+.login-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: url('login-bg.jpg') no-repeat center center;
+  background-size: cover;
+  background-color: #0f2027;
+  font-family: "Poppins", sans-serif;
+  position: relative;
+  overflow: hidden;
+  padding-top: 0;
+}
+
+.login-container .login-card {
+  margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+  .login-container .login-card {
+    margin-top: 10px;
+  }
+}
+
+.login-container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 32, 39, 0.85);
+  z-index: 0;
+}
+
+.login-card {
+  position: relative;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 45px 40px;
+  width: 360px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+}
+
+.login-title {
+  text-align: center;
+  font-size: 30px;
+  margin-bottom: 25px;
+  background: linear-gradient(90deg, #00e0ff, #7f5eff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.login-card label {
+  font-size: 15px;
+  margin-bottom: 6px;
+}
+
+.login-card input {
+  padding: 12px 14px;
+  margin-bottom: 22px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  transition: all 0.3s ease;
+}
+
+.login-card input::placeholder {
+  color: #ccc;
+}
+
+.login-card input:focus {
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 10px #00e0ff;
+}
+
+.btn-login,
+.btn-google {
+  width: 100%;
+  padding: 12px 16px;
+  margin-bottom: 18px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-login {
+  background: linear-gradient(90deg, #00e0ff, #7f5eff);
+  color: #fff;
+}
+
+.btn-google {
+  background: linear-gradient(90deg, #ff4b4b, #ff6b6b);
+  color: #fff;
+}
+
+.login-links {
+  text-align: center;
+  font-size: 14px;
+}
+
+.login-links a {
+  color: #00e0ff;
+  text-decoration: none;
+}
+
+.login-links a:hover {
+  text-decoration: underline;
+}
+
+.login-links p {
+  margin-top: 10px;
+  color: #ccc;
+}
+
+.error-message {
+  background: rgba(255, 0, 0, 0.2);
+  color: #ff6b6b;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.forgot-btn {
+  background: none;
+  border: none;
+  color: #00e0ff;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: underline;
+  margin-top: 5px;
+}
+
+.forgot-btn:hover {
+  color: #7f5eff;
+}
+
+/* ---------------- Modal ---------------- */
+.modal-overlay {
+  position: fixed;
+  z-index: 2000;
+  inset: 0;
+  background: rgba(0,0,0,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.custom-modal {
+  background: #F9FCEE;
+  color: #222;
+  border-radius: 18px;
+  padding: 32px 34px 24px 28px;
+  max-width: 480px;
+  min-width: 340px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.12);
+  border: 2px solid #f4f7e0;
+  display: flex;
+  flex-direction: column;
+  font-size: 16px;
+}
+.modal-ok-btn {
+  align-self: flex-end;
+  margin-top: 10px;
+  font-size: 16px;
+  background: #558143;
+  color: #fff;
+  border: 2.5px solid #32552d;
+  border-radius: 36px;
+  padding: 8px 28px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px #b7dac2;
+  transition: background .18s, box-shadow .18s;
+}
+.modal-ok-btn:hover {
+  background: #416e37;
+  box-shadow: 0 3px 10px #d9f2e0;
+}
+
+/* ---------------- Responsive Queries ---------------- */
+
+/* For tablets (portrait mode and smaller laptops) */
+@media (max-width: 1024px) {
+  .login-card {
+    width: 70%;
+    padding: 40px 30px;
+  }
+}
+
+/* For medium screens (tablets and large phones) */
+@media (max-width: 768px) {
+  .login-card {
+    width: 85%;
+    padding: 35px 25px;
+  }
+  .login-title {
+    font-size: 26px;
+  }
+  .btn-login,
+  .btn-google {
+    font-size: 0.95rem;
+    padding: 10px 14px;
+  }
+}
+
+/* For small screens (phones) */
+@media (max-width: 480px) {
+  .login-container {
+    background: #0f2027;
+    padding: 20px;
+  }
+  .login-card {
+    width: 100%;
+    padding: 28px 20px;
+    border-radius: 16px;
+  }
+  .login-title {
+    font-size: 22px;
+  }
+  .login-card input {
+    font-size: 14px;
+    padding: 10px 12px;
+  }
+  .btn-login,
+  .btn-google {
+    padding: 10px;
+    font-size: 14px;
+  }
+}
+
+/* For very small phones (below 360px) */
+@media (max-width: 360px) {
+  .login-card {
+    padding: 22px 16px;
+  }
+  .login-title {
+    font-size: 20px;
+  }
+  .login-card input {
+    font-size: 13px;
+  }
+  .btn-login,
+  .btn-google {
+    font-size: 13px;
+  }
+}

@@ -1,0 +1,485 @@
+const { GoogleGenerativeAI } = require('@google/generative-ai');
+
+// Initialize lazily to avoid throwing at module import time when env vars are missing
+const MODEL_NAMES = [
+    'gemini-2.5-flash'
+];
+let genAI = null;
+
+// Global configuration for more reliable JSON output
+const DEFAULT_CONFIG = {
+    temperature: 0.1,  // Lower temperature for more deterministic output
+    maxOutputTokens: 4096,  // Reduced token limit to avoid processing delays
+    topK: 1,          // Further constrain output
+    topP: 0.1,        // More focused on highest probability tokens
+};
+
+// Constants for retry behavior
+const MAX_ATTEMPTS = 4;
+const BASE_DELAY_MS = 600; // base delay for exponential backoff
+
+// Helper: sleep for ms milliseconds
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+// Helper: decide whether an error is retryable (transient service errors)
+function isRetryableError(err) {
+    if (!err) return false;
+    const msg = (err.message || '').toLowerCase();
+    // Common transient signals: 429, 503, rate limit, overloaded, timeout, network fetch failure
+    if (err.status === 429 || err.status === 503) return true;
+    if (msg.includes('rate limit') || msg.includes('overloaded') || 
+        msg.includes('service unavailable') || msg.includes('timeout') || 
+        msg.includes('temporar')) return true;
+    if (msg.includes('fetch') && msg.includes('error')) return true;
+    return false;
+}
+
+async function ensureClient() {
+    if (genAI) return genAI;
+    const apiKey = process.env.GEMINI_API;
+    if (!apiKey) {
+        const err = new Error('GEMINI_API key is not set in environment variables');
+        err.code = 'NO_GEMINI_KEY';
+        throw err;
+    }
+
+    genAI = new GoogleGenerativeAI(apiKey);
+
+    // Test each model name and use the first one that works
+    for (const modelName of MODEL_NAMES) {
+        try {
+            const model = genAI.getGenerativeModel({ model: modelName });
+            const testResult = await model.generateContent({ contents: [{ role: 'user', parts: [{ text: 'test' }] }] });
+            if (testResult && testResult.response) {
+                console.log(`Using Gemini model: ${modelName}`);
+                return genAI;
+            }
+        } catch (e) {
+            console.warn(`Model ${modelName} not available:`, e.message);
+            continue;
+        }
+    }
+
+    throw new Error('No working Gemini models found. Please check API key and model availability.');
+}
+
+// Helper: Try to parse JSON with cleaning and handle truncation
+function tryParseJson(str) {
+    if (!str || typeof str !== 'string') return null;
+    
+    // First try cleaning markdown and code blocks
+    let cleaned = str.replace(/```json\s*|\s*```/g, '');
+    
+    // Find the outermost JSON object
+    const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
+    if (jsonMatch) cleaned = jsonMatch[0];
+    
+    // Clean up quotes and whitespace
+    cleaned = cleaned.replace(/[\u201C\u201D]/g, '"')
+                    .replace(/[\u2018\u2019]/g, "'")
+                    .replace(/\s+/g, ' ')
+                    .trim();
+    
+    try {
+        // First try parsing as is
+        return JSON.parse(cleaned);
+    } catch (e1) {
+        try {
+            // If that fails and we detect truncation, try to repair the JSON
+            if (cleaned.includes('..."') || cleaned.includes('...[') || cleaned.includes('...')) {
+                // Find the last complete property
+                const lastValidBrace = cleaned.lastIndexOf('}');
+                if (lastValidBrace > 0) {
+                    // Attempt to close any open structures
+                    let partial = cleaned.substring(0, lastValidBrace + 1);
+                    const openBraces = (partial.match(/\{/g) || []).length;
+                    const closeBraces = (partial.match(/\}/g) || []).length;
+                    const openBrackets = (partial.match(/\[/g) || []).length;
+                    const closeBrackets = (partial.match(/\]/g) || []).length;
+                    
+                    // Add missing closing braces/brackets
+                    while (closeBrackets < openBrackets) {
+                        partial += ']';
+                    }
+                    while (closeBraces < openBraces) {
+                        partial += '}';
+                    }
+                    
+                    return JSON.parse(partial);
+                }
+            }
+        } catch (e2) {
+            console.warn('Failed to repair truncated JSON:', e2.message);
+        }
+        return null;
+    }
+}
+
+async function generateStructuredContent(text) {
+    if (!text || typeof text !== 'string') {
+        throw new Error('Text required for structuring');
+    }
+
+    try {
+        // First get high level structure
+        const structurePrompt = `Analyze this text and create a basic chapter outline. Return ONLY a JSON object with this format:
+{
+    "subject": "Main subject",
+    "chapters": [
+        {
+            "id": "1",
+            "name": "Chapter name",
+            "difficulty": "beginner"
+        }
+    ]
+}
+
+Text to analyze:
+"""
+${text}
+"""`;
+
+        const genAIClient = await ensureClient();
+        const model = genAIClient.getGenerativeModel({ model: MODEL_NAMES[0] });
+
+        // Get basic structure first
+        const structureResult = await model.generateContent({
+            contents: [{ role: 'user', parts: [{ text: structurePrompt }] }],
+            generationConfig: {
+                ...DEFAULT_CONFIG,
+                temperature: 0.1,
+                maxOutputTokens: 2048
+            }
+        });
+
+        const structureText = await structureResult.response.text();
+        console.log('Structure response:', structureText);
+        
+        const structure = tryParseJson(structureText);
+        if (!structure || !structure.chapters) {
+            throw new Error('Failed to generate basic structure');
+        }
+
+        // Now get details for each chapter sequentially
+        const detailedChapters = [];
+        for (const chapter of structure.chapters) {
+            const detailPrompt = `For chapter ${chapter.id} "${chapter.name}" create this exact JSON structure:
+{
+    "id": "${chapter.id}",
+    "name": "${chapter.name}",
+    "difficulty": "beginner",
+    "sections": [
+        {
+            "id": "${chapter.id}.1",
+            "name": "Section name",
+            "difficulty": "beginner",
+            "subsections": [
+                {
+                    "id": "${chapter.id}.1.1",
+                    "name": "Subsection name",
+                    "type": "concept",
+                    "content": {
+                        "description": "Brief description (under 50 words)",
+                        "key_points": ["Point 1", "Point 2"],
+                        "examples": ["Example 1"],
+                        "difficulty": "beginner"
+                    }
+                }
+            ]
+        }
+    ]
+}
+
+Requirements:
+1. Only 2 sections per chapter maximum
+2. Only 1-2 subsections per section
+3. Keep descriptions under 50 words
+4. Return valid JSON only
+
+Context:
+"""
+${text}
+"""`;
+
+            // Get chapter details with retries
+            let chapterDetail = null;
+            for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+                try {
+                    const detailResult = await model.generateContent({
+                        contents: [{ role: 'user', parts: [{ text: detailPrompt }] }],
+                        generationConfig: {
+                            ...DEFAULT_CONFIG,
+                            temperature: 0.1
+                        }
+                    });
+
+                    const detailText = await detailResult.response.text();
+                    console.log(`Chapter ${chapter.id} response:`, detailText.substring(0, 100) + '...');
+                    
+                    chapterDetail = tryParseJson(detailText);
+                    if (chapterDetail && chapterDetail.sections) {
+                        detailedChapters.push(chapterDetail);
+                        break;
+                    }
+
+                    if (attempt < MAX_ATTEMPTS) {
+                        const backoff = Math.round(BASE_DELAY_MS * Math.pow(2, attempt - 1));
+                        await sleep(backoff + Math.round(Math.random() * backoff * 0.3));
+                    }
+                } catch (e) {
+                    console.warn(`Chapter ${chapter.id} attempt ${attempt} failed:`, e.message);
+                    if (attempt < MAX_ATTEMPTS && isRetryableError(e)) {
+                        const backoff = Math.round(BASE_DELAY_MS * Math.pow(2, attempt - 1));
+                        await sleep(backoff + Math.round(Math.random() * backoff * 0.3));
+                        continue;
+                    }
+                    throw e;
+                }
+            }
+            
+            if (!chapterDetail) {
+                throw new Error(`Failed to generate details for chapter ${chapter.id}`);
+            }
+        }
+
+        return {
+            subject: structure.subject,
+            chapters: detailedChapters
+        };
+    } catch (error) {
+        console.error('Content generation error:', {
+            message: error.message,
+            status: error.status,
+            statusText: error.statusText,
+            stack: error.stack
+        });
+
+        throw new Error('Failed to generate content: ' + (error.message || error));
+    }
+}
+
+async function generateText(prompt, options = {}) {
+    if (!prompt || typeof prompt !== 'string') {
+        throw new Error('Prompt required for text generation');
+    }
+
+    try {
+        const client = await ensureClient();
+        const generationConfig = {
+            ...DEFAULT_CONFIG,
+            ...options,
+        };
+
+        let lastError = null;
+        for (const modelName of MODEL_NAMES) {
+            const model = client.getGenerativeModel({ model: modelName });
+            
+            for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+                try {
+                    const result = await model.generateContent({
+                        contents: [{ role: 'user', parts: [{ text: prompt }] }],
+                        generationConfig,
+                    });
+
+                    if (!result || !result.response) {
+                        throw new Error('Empty response from model');
+                    }
+
+                    if (result.response && typeof result.response.text === 'function') {
+                        const maybe = result.response.text();
+                        return maybe instanceof Promise ? await maybe : maybe;
+                    }
+
+                    if (typeof result.response === 'string') return result.response;
+                    if (result.outputText) return result.outputText;
+
+                    return JSON.stringify(result.response);
+
+                } catch (err) {
+                    lastError = err;
+                    if (isRetryableError(err) && attempt < MAX_ATTEMPTS) {
+                        const backoff = Math.round(BASE_DELAY_MS * Math.pow(2, attempt - 1));
+                        const jitter = Math.round(Math.random() * (backoff * 0.3));
+                        const wait = backoff + jitter;
+                        console.warn(`Transient Gemini error (model=${modelName}) attempt ${attempt}/${MAX_ATTEMPTS}: ${err.message}. Retrying in ${wait}ms.`);
+                        await sleep(wait);
+                        continue;
+                    }
+                    console.warn(`Gemini model ${modelName} failed:`, err.message);
+                    break;
+                }
+            }
+        }
+
+        throw lastError || new Error('All models and retries failed');
+    } catch (error) {
+        console.error('Text generation error:', {
+            message: error.message,
+            status: error.status,
+            statusText: error.statusText,
+            stack: error.stack
+        });
+
+        if (error.name === 'TypeError' && error.message && error.message.includes('fetch')) {
+            throw new Error('Network error: Failed to connect to Gemini API');
+        }
+
+        if (error.status) {
+            throw new Error('Gemini API error: ' + error.status + ' - ' + (error.statusText || error.message));
+        }
+
+        throw new Error('Failed to generate text: ' + (error.message || error));
+    }
+}
+
+// Streaming version of generateStructuredContent
+async function generateStructuredContentStream(text, sendEvent) {
+    if (!text || typeof text !== 'string') {
+        throw new Error('Text required for structuring');
+    }
+
+    try {
+        const structurePrompt = `Analyze this text and create a basic chapter outline. Return ONLY a JSON object with this format:
+{
+    "subject": "Main subject",
+    "chapters": [
+        {
+            "id": "1",
+            "name": "Chapter name",
+            "difficulty": "beginner"
+        }
+    ]
+}
+
+Text to analyze:
+"""
+${text}
+"""`;
+
+        const genAIClient = await ensureClient();
+        const model = genAIClient.getGenerativeModel({ model: MODEL_NAMES[0] });
+
+        sendEvent('chapter_structure', { message: 'Analyzing content structure...' });
+        const structureResult = await model.generateContent({
+            contents: [{ role: 'user', parts: [{ text: structurePrompt }] }],
+            generationConfig: {
+                ...DEFAULT_CONFIG,
+                temperature: 0.1,
+                maxOutputTokens: 2048
+            }
+        });
+
+        const structureText = await structureResult.response.text();
+        const structure = tryParseJson(structureText);
+        if (!structure || !structure.chapters) {
+            throw new Error('Failed to generate basic structure');
+        }
+
+        sendEvent('chapters_found', { count: structure.chapters.length });
+
+        const detailedChapters = [];
+        for (let i = 0; i < structure.chapters.length; i++) {
+            const chapter = structure.chapters[i];
+            sendEvent('chapter_progress', { 
+                current: i + 1, 
+                total: structure.chapters.length,
+                chapter: chapter.name 
+            });
+
+            const detailPrompt = `For chapter ${chapter.id} "${chapter.name}" create this exact JSON structure:
+{
+    "id": "${chapter.id}",
+    "name": "${chapter.name}",
+    "difficulty": "beginner",
+    "sections": [
+        {
+            "id": "${chapter.id}.1",
+            "name": "Section name",
+            "difficulty": "beginner",
+            "subsections": [
+                {
+                    "id": "${chapter.id}.1.1",
+                    "name": "Subsection name",
+                    "type": "concept",
+                    "content": {
+                        "description": "Brief description (under 50 words)",
+                        "key_points": ["Point 1", "Point 2"],
+                        "examples": ["Example 1"],
+                        "difficulty": "beginner"
+                    }
+                }
+            ]
+        }
+    ]
+}
+
+Requirements:
+1. Only 2 sections per chapter maximum
+2. Only 1-2 subsections per section
+3. Keep descriptions under 50 words
+4. Return valid JSON only
+
+Context:
+"""
+${text}
+"""`;
+
+            let chapterDetail = null;
+            for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+                try {
+                    const detailResult = await model.generateContent({
+                        contents: [{ role: 'user', parts: [{ text: detailPrompt }] }],
+                        generationConfig: {
+                            ...DEFAULT_CONFIG,
+                            temperature: 0.1
+                        }
+                    });
+
+                    const detailText = await detailResult.response.text();
+                    chapterDetail = tryParseJson(detailText);
+                    if (chapterDetail && chapterDetail.sections) {
+                        detailedChapters.push(chapterDetail);
+                        break;
+                    }
+
+                    if (attempt < MAX_ATTEMPTS) {
+                        const backoff = Math.round(BASE_DELAY_MS * Math.pow(2, attempt - 1));
+                        await sleep(backoff + Math.round(Math.random() * backoff * 0.3));
+                    }
+                } catch (e) {
+                    console.warn(`Chapter ${chapter.id} attempt ${attempt} failed:`, e.message);
+                    if (attempt < MAX_ATTEMPTS && isRetryableError(e)) {
+                        const backoff = Math.round(BASE_DELAY_MS * Math.pow(2, attempt - 1));
+                        await sleep(backoff + Math.round(Math.random() * backoff * 0.3));
+                        continue;
+                    }
+                    throw e;
+                }
+            }
+            
+            if (!chapterDetail) {
+                throw new Error(`Failed to generate details for chapter ${chapter.id}`);
+            }
+        }
+
+        return {
+            subject: structure.subject,
+            chapters: detailedChapters
+        };
+    } catch (error) {
+        console.error('Content generation error:', {
+            message: error.message,
+            status: error.status,
+            statusText: error.statusText,
+            stack: error.stack
+        });
+
+        throw new Error('Failed to generate content: ' + (error.message || error));
+    }
+}
+
+module.exports = {
+    generateStructuredContent,
+    generateStructuredContentStream,
+    generateText
+};

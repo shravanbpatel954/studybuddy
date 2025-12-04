@@ -1,0 +1,361 @@
+.landingContainer {
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  background: var(--sb-bg);
+  background-image: radial-gradient(circle at top left, rgba(123, 92, 255, 0.1), transparent 50%),
+                    radial-gradient(circle at bottom right, rgba(78, 162, 255, 0.1), transparent 50%);
+  color: var(--sb-text);
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100vw;
+}
+
+/* Glassmorphism effect */
+.glass {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 60px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo {
+  font-size: 28px;
+  font-weight: 700;
+  color: #00e0ff;
+}
+
+.navLinks a {
+  margin: 0 15px;
+  text-decoration: none;
+  color: #fff;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+.navLinks a:hover {
+  color: #00e0ff;
+}
+
+/* Glowing Button */
+.btnGlow {
+  background: linear-gradient(135deg, var(--sb-accent), var(--sb-accent-2));
+  color: #fff;
+  border: none;
+  padding: 12px 28px;
+  border-radius: var(--sb-radius-full);
+  cursor: pointer;
+  font-weight: 600;
+  font-size: var(--font-size-base);
+  box-shadow: var(--sb-shadow-glow);
+  transition: all var(--transition-base);
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.btnGlow::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s;
+}
+
+.btnGlow:hover::before {
+  left: 100%;
+}
+
+.btnGlow a {
+  text-decoration: none;
+  color: white;
+  position: relative;
+  z-index: 1;
+}
+
+.btnGlow:hover {
+  box-shadow: 0 8px 30px rgba(123, 92, 255, 0.6);
+  transform: translateY(-2px);
+}
+
+.btnGlow:active {
+  transform: translateY(0);
+}
+
+/* Hero Section */
+.hero {
+  text-align: center;
+  padding: clamp(80px, 10vw, 140px) 20px;
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.darkGradient {
+  background: transparent;
+  position: relative;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(123, 92, 255, 0.2) 0%, transparent 70%);
+  animation: sb-pulse-glow 4s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero > * {
+  position: relative;
+  z-index: 1;
+}
+
+.hero h2 {
+  font-size: clamp(2.2rem, 5vw + 1rem, 3.8rem);
+  background: linear-gradient(135deg, var(--sb-accent-2), var(--sb-accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 24px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.hero p {
+  color: var(--sb-text-muted);
+  font-size: clamp(1rem, 1.5vw + 0.5rem, 1.25rem);
+  max-width: 700px;
+  margin: 0 auto 40px;
+  line-height: 1.6;
+}
+
+/* Features */
+.features {
+  padding: 100px 40px;
+  text-align: center;
+}
+
+.features h3 {
+  font-size: 36px;
+  color: #00e0ff;
+  margin-bottom: 60px;
+}
+
+.featureGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 40px;
+}
+
+.featureCard {
+  border-radius: var(--sb-radius-lg);
+  padding: 32px 24px;
+  color: var(--sb-text);
+  position: relative;
+  transition: all var(--transition-base);
+  background: var(--sb-card);
+  border: 1px solid var(--sb-border-subtle);
+  box-shadow: var(--sb-shadow-soft);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.featureCard:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--sb-shadow-lg);
+  border-color: var(--sb-border-hover);
+}
+
+.neonGlow {
+  box-shadow: 0 0 30px rgba(123, 92, 255, 0.3);
+}
+
+.featureNumber {
+  position: absolute;
+  top: 20px;
+  left: 25px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #ff2cdf;
+}
+
+.featureCard h4 {
+  color: var(--sb-accent-2);
+  margin-top: 20px;
+  font-size: clamp(1.1rem, 1.2vw + 0.5rem, 1.4rem);
+  font-weight: 600;
+}
+
+.featureCard p {
+  font-size: var(--font-size-base);
+  color: var(--sb-text-muted);
+  margin-top: 12px;
+  line-height: 1.6;
+  flex: 1;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 25px;
+  color: #aaa;
+  font-size: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: 60px;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .hero {
+    padding: 80px 20px;
+  }
+
+  .hero h2 {
+    font-size: 38px;
+  }
+
+  .features {
+    padding: 80px 30px;
+  }
+
+  .featureGrid {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .landingContainer {
+    overflow-x: hidden;
+  }
+
+  .hero {
+    padding: 60px 20px 40px;
+  }
+
+  .hero h2 {
+    font-size: 28px;
+    line-height: 1.3;
+    margin-bottom: 16px;
+  }
+
+  .hero p {
+    font-size: 16px;
+    margin-bottom: 28px;
+    padding: 0 10px;
+  }
+
+  .btnGlow {
+    padding: 12px 24px;
+    font-size: 15px;
+  }
+
+  .features {
+    padding: 60px 20px;
+  }
+
+  .features h3 {
+    font-size: 28px;
+    margin-bottom: 40px;
+  }
+
+  .featureGrid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    max-width: 100%;
+  }
+
+  .featureCard {
+    padding: 30px 20px;
+    margin: 0 auto;
+    max-width: 100%;
+  }
+
+  .featureNumber {
+    top: 15px;
+    left: 20px;
+    font-size: 16px;
+  }
+
+  .featureCard h4 {
+    font-size: 18px;
+    margin-top: 15px;
+  }
+
+  .featureCard p {
+    font-size: 14px;
+    margin-top: 8px;
+  }
+
+  .footer {
+    padding: 20px;
+    font-size: 13px;
+    margin-top: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    padding: 50px 15px 30px;
+  }
+
+  .hero h2 {
+    font-size: 24px;
+    line-height: 1.2;
+  }
+
+  .hero p {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .btnGlow {
+    padding: 10px 20px;
+    font-size: 14px;
+    width: 90%;
+    max-width: 280px;
+  }
+
+  .features {
+    padding: 50px 15px;
+  }
+
+  .features h3 {
+    font-size: 24px;
+    margin-bottom: 30px;
+  }
+
+  .featureCard {
+    padding: 25px 18px;
+  }
+
+  .featureCard h4 {
+    font-size: 16px;
+  }
+
+  .featureCard p {
+    font-size: 13px;
+  }
+}
+

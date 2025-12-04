@@ -1,0 +1,310 @@
+/* StudyBuddy Utility Classes - Reusable Components */
+
+/* ============================================
+   CARDS
+   ============================================ */
+.sb-card {
+  background: var(--sb-card);
+  border-radius: var(--sb-radius-lg);
+  box-shadow: var(--sb-shadow-soft);
+  padding: var(--spacing-lg);
+  border: 1px solid var(--sb-border-subtle);
+  transition: all var(--transition-base);
+}
+
+.sb-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--sb-shadow-lg);
+  border-color: var(--sb-border-hover);
+}
+
+.sb-card-elevated {
+  background: var(--sb-bg-elevated);
+  box-shadow: var(--sb-shadow-md);
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+.sb-pill-button {
+  padding: 10px 22px;
+  border-radius: var(--sb-radius-full);
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(135deg, var(--sb-accent), var(--sb-accent-2));
+  color: white;
+  font-weight: 600;
+  font-size: var(--font-size-base);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.sb-pill-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+}
+
+.sb-pill-button:active {
+  transform: translateY(0);
+}
+
+.sb-pill-button-secondary {
+  background: linear-gradient(135deg, var(--sb-accent-secondary), var(--sb-accent-secondary-2));
+}
+
+.sb-pill-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ============================================
+   TYPOGRAPHY
+   ============================================ */
+.sb-title {
+  font-size: clamp(2.2rem, 3vw + 1rem, 3.4rem);
+  font-weight: 700;
+  color: var(--sb-text);
+  line-height: 1.2;
+  margin: 0;
+}
+
+.sb-subtitle {
+  font-size: clamp(1.1rem, 1.5vw + 0.5rem, 1.5rem);
+  font-weight: 500;
+  color: var(--sb-text-muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.sb-text {
+  font-size: var(--font-size-base);
+  color: var(--sb-text);
+  line-height: 1.6;
+}
+
+.sb-text-muted {
+  font-size: var(--font-size-sm);
+  color: var(--sb-text-muted);
+  line-height: 1.5;
+}
+
+.sb-heading-1 {
+  font-size: clamp(2rem, 2.5vw + 1rem, 2.8rem);
+  font-weight: 700;
+  color: var(--sb-text);
+  line-height: 1.3;
+}
+
+.sb-heading-2 {
+  font-size: clamp(1.5rem, 2vw + 0.5rem, 2.2rem);
+  font-weight: 600;
+  color: var(--sb-text);
+  line-height: 1.4;
+}
+
+.sb-heading-3 {
+  font-size: clamp(1.25rem, 1.5vw + 0.5rem, 1.75rem);
+  font-weight: 600;
+  color: var(--sb-text);
+  line-height: 1.4;
+}
+
+/* ============================================
+   LAYOUT
+   ============================================ */
+.sb-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+@media (min-width: 768px) {
+  .sb-container {
+    padding: 24px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .sb-container {
+    padding: 32px;
+  }
+}
+
+.sb-page-container {
+  min-height: 100vh;
+  background: var(--sb-bg);
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+@media (min-width: 768px) {
+  .sb-page-container {
+    padding: 24px;
+  }
+}
+
+.sb-flex {
+  display: flex;
+}
+
+.sb-flex-column {
+  flex-direction: column;
+}
+
+.sb-flex-center {
+  align-items: center;
+  justify-content: center;
+}
+
+.sb-flex-between {
+  justify-content: space-between;
+}
+
+.sb-flex-wrap {
+  flex-wrap: wrap;
+}
+
+.sb-grid {
+  display: grid;
+  gap: var(--spacing-md);
+}
+
+.sb-grid-auto-fit {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .sb-grid-auto-fit {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+}
+
+/* ============================================
+   PROGRESS BARS
+   ============================================ */
+.sb-progress-bar {
+  width: 100%;
+  height: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--sb-radius-full);
+  overflow: hidden;
+  position: relative;
+}
+
+.sb-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--sb-accent), var(--sb-accent-2));
+  border-radius: var(--sb-radius-full);
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.sb-progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  animation: sb-shimmer 2s infinite;
+}
+
+@keyframes sb-shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* ============================================
+   GLOW EFFECTS
+   ============================================ */
+.sb-glow-background {
+  position: relative;
+}
+
+.sb-glow-background::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(123, 92, 255, 0.15) 0%, transparent 70%);
+  animation: sb-pulse-glow 4s ease-in-out infinite;
+  pointer-events: none;
+  z-index: -1;
+}
+
+@keyframes sb-pulse-glow {
+  0%, 100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.1);
+  }
+}
+
+/* ============================================
+   SPACING UTILITIES
+   ============================================ */
+.sb-mt-sm { margin-top: var(--spacing-sm); }
+.sb-mt-md { margin-top: var(--spacing-md); }
+.sb-mt-lg { margin-top: var(--spacing-lg); }
+.sb-mb-sm { margin-bottom: var(--spacing-sm); }
+.sb-mb-md { margin-bottom: var(--spacing-md); }
+.sb-mb-lg { margin-bottom: var(--spacing-lg); }
+.sb-p-sm { padding: var(--spacing-sm); }
+.sb-p-md { padding: var(--spacing-md); }
+.sb-p-lg { padding: var(--spacing-lg); }
+
+/* ============================================
+   MOBILE RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+  .sb-card {
+    padding: var(--spacing-md);
+    border-radius: 12px;
+  }
+  
+  .sb-pill-button {
+    width: 100%;
+    min-height: 44px;
+  }
+  
+  .sb-container {
+    padding: 16px;
+  }
+}
+
+/* ============================================
+   NO HORIZONTAL SCROLL
+   ============================================ */
+.sb-no-scroll-x {
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100vw;
+  box-sizing: border-box;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100vw;
+}
+

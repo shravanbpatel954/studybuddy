@@ -1,0 +1,118 @@
+/* Global Mobile Enhancements */
+
+/* Prevent text size adjustment on iOS */
+* {
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* Better touch targets for mobile */
+@media (max-width: 768px) {
+  button,
+  a,
+  input[type="button"],
+  input[type="submit"],
+  .clickable {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Prevent zoom on input focus (iOS) */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+
+  /* Better scrolling */
+  * {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Remove tap highlight */
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* Safe area insets for notched devices */
+@supports (padding: max(0px)) {
+  body {
+    padding-left: max(0px, env(safe-area-inset-left));
+    padding-right: max(0px, env(safe-area-inset-right));
+  }
+
+  .top-header,
+  .pwa-install-prompt {
+    padding-left: max(20px, env(safe-area-inset-left));
+    padding-right: max(20px, env(safe-area-inset-right));
+  }
+}
+
+/* Better focus states for accessibility */
+@media (max-width: 768px) {
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible {
+    outline: 2px solid #00e0ff;
+    outline-offset: 2px;
+  }
+}
+
+/* Optimize animations for mobile */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Better font rendering on mobile */
+@media (max-width: 768px) {
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+}
+
+/* Prevent horizontal scroll */
+html,
+body {
+  overflow-x: hidden;
+  width: 100%;
+  position: relative;
+}
+
+/* Better modal behavior on mobile */
+@media (max-width: 768px) {
+  .modal-overlay,
+  .modal {
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+}
+
+/* Mobile Navigation Enhancements */
+@media (max-width: 768px) {
+  /* Ensure content doesn't interfere with navigation */
+  .dashboard-content {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Prevent body scroll when modal is open */
+  body.modal-open {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+  }
+}
+

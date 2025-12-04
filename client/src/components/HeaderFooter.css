@@ -1,0 +1,74 @@
+/* HEADER */
+.hf-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  background: #0f1217;
+  border-bottom: 1px solid #1f2937;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.hf-title {
+  color: #b9bfff;
+  font-size: 20px;
+}
+
+.hf-chat-btn {
+  background: #2c2f3b;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 12px;
+  color: white;
+  font-size: 18px;
+}
+
+/* POINTS BOX */
+.hf-points-section {
+  padding: 10px 20px;
+}
+
+.hf-points-box {
+  background: #1e2230;
+  padding: 12px 16px;
+  border-radius: 10px;
+  width: fit-content;
+  color: white;
+}
+
+/* MAIN CONTENT */
+.hf-content {
+  padding: 20px;
+  padding-bottom: 80px; /* prevents footer overlap */
+}
+
+/* MOBILE FOOTER */
+.hf-footer {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .hf-footer {
+    display: flex;
+    justify-content: space-around;
+    background: #0f1217;
+    padding: 10px 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    border-top: 1px solid #1f2937;
+    z-index: 200;
+  }
+
+  .hf-footer button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+}

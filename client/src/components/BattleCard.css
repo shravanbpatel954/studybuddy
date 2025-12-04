@@ -1,0 +1,173 @@
+.battle-card {
+  background: #232946;
+  color: #fff;
+  border-radius: 18px;
+  box-shadow: 0 8px 32px rgba(35, 41, 70, 0.18);
+  padding: 2rem;
+  margin: 1.5rem 0;
+  position: relative;
+  overflow: hidden;
+  animation: fadeInBattle 0.7s cubic-bezier(0.4,0,0.2,1);
+}
+
+.challenge-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: linear-gradient(90deg, #ffb86b, #ff6bcb);
+  color: #232946;
+  padding: 0.4rem 1.2rem;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 1rem;
+  box-shadow: 0 2px 8px rgba(255, 107, 203, 0.08);
+  z-index: 2;
+}
+.difficulty.easy { background: #b8f2e6; color: #232946; }
+.difficulty.medium { background: #ffd86b; color: #232946; }
+.difficulty.hard { background: #ff6b6b; color: #fff; }
+
+.question-display {
+  margin-bottom: 1.5rem;
+  min-height: 60px;
+  position: relative;
+}
+
+.battle-effects {
+  position: absolute;
+  left: 50%;
+  top: -30px;
+  transform: translateX(-50%);
+  font-size: 2.5rem;
+  z-index: 3;
+  pointer-events: none;
+}
+.hit-effect.correct {
+  color: #00ff87;
+  animation: popEffect 0.5s;
+}
+.hit-effect.incorrect {
+  color: #ff6b6b;
+  animation: shakeEffect 0.5s;
+}
+
+.battle-options {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.battle-option {
+  background: #121629;
+  color: #fff;
+  border: 2px solid #232946;
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, border 0.2s, transform 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  position: relative;
+}
+.battle-option.correct {
+  background: #00ff87;
+  color: #232946;
+  border-color: #00ff87;
+  animation: correctGlow 0.7s;
+}
+.battle-option.incorrect {
+  background: #ff6b6b;
+  color: #fff;
+  border-color: #ff6b6b;
+  animation: incorrectShake 0.7s;
+}
+.battle-option.attacking {
+  transform: scale(1.08) rotate(-2deg);
+  box-shadow: 0 0 16px #ffb86b44;
+}
+.option-content {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+.option-icon {
+  font-size: 1.3rem;
+  margin-left: 0.5rem;
+}
+
+.explanation {
+  margin-top: 1.2rem;
+  padding: 1rem;
+  border-radius: 10px;
+  font-size: 1rem;
+  background: #232946;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(35, 41, 70, 0.08);
+  transition: background 0.2s;
+}
+.explanation.correct {
+  background: #00ff87;
+  color: #232946;
+}
+.explanation.incorrect {
+  background: #ff6b6b;
+  color: #fff;
+}
+
+.battle-particles {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 100px;
+  height: 100px;
+  pointer-events: none;
+  z-index: 10;
+}
+.particle {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ffb86b, #ff6bcb);
+  opacity: 0.7;
+  animation: particleBurst 0.7s forwards;
+  animation-delay: var(--delay, 0s);
+  transform: rotate(var(--angle, 0deg)) translateY(-10px);
+}
+
+@keyframes fadeInBattle {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes popEffect {
+  0% { transform: scale(0.7); opacity: 0.5; }
+  60% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes shakeEffect {
+  0% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-8px); }
+  80% { transform: translateX(8px); }
+  100% { transform: translateX(0); }
+}
+@keyframes correctGlow {
+  0% { box-shadow: 0 0 0 0 #00ff8744; }
+  100% { box-shadow: 0 0 24px 8px #00ff8744; }
+}
+@keyframes incorrectShake {
+  0% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-6px); }
+  80% { transform: translateX(6px); }
+  100% { transform: translateX(0); }
+}
+@keyframes particleBurst {
+  0% { opacity: 0.7; transform: scale(0.5) rotate(var(--angle, 0deg)) translateY(-10px); }
+  80% { opacity: 1; transform: scale(1.2) rotate(var(--angle, 0deg)) translateY(-60px); }
+  100% { opacity: 0; transform: scale(0.8) rotate(var(--angle, 0deg)) translateY(-80px); }
+}
