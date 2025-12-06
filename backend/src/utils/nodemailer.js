@@ -4,13 +4,13 @@ export const sendPasswordResetEmail = async (email, resetLink) => {
     const transporter = nodemailer.createTransport({
         service: "gmail", // You can use other services as well like SendGrid or Mailgun
         auth: {
-            user: process.env.EMAIL_USERNAME,
-            pass: process.env.EMAIL_PASSWORD,
+            user: process.env.SMTP_USER,
+            pass: process.env.SMTP_PASS,
         },
     });
 
     const mailOptions = {
-        from: process.env.EMAIL_USERNAME,
+        from: process.env.SMTP_USER,
         to: email,
         subject: "Password Reset Request",
         text: `To reset your password, click the following link: ${resetLink}`,
