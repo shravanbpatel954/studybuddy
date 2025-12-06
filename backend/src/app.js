@@ -1,115 +1,144 @@
-const express = require("express");
-const cors = require("cors");
-const morgan = require("morgan");
-const { PasspORt } = require("./utils/passport");
-const session = require("express-session");
-const { GoogleProvider } = require("./utils/GoogleStregy");
+const express = require("express")
+const cors = require("cors")
+const morgan = require("morgan")
+const { PasspORt } = require("./utils/passport")
+const session = require("express-session")
+const { GoogleProvider } = require("./utils/GoogleStregy")
+//server
+const app = express()
 
-const app = express();
+// middleware
+// CORS configuration - enhanced for production Render.com deployment
+const corsOptions = {
+  origin: function (origin, callback) {
+    // List of allowed origins
+    const allowedOrigins = [
+      'http://localhost:3000',
+      'http://localhost:8080',
+      'http://localhost:5000',
+      'https://studybuddy-kc2m.onrender.com',
+      'https://studybuddy-frontend.onrender.com',
+      'https://studybuddy-backend-i649.onrender.com',
+      process.env.FRONTEND_URL,
+      process.env.ALLOWED_ORIGINS,
+    ].filter(Boolean);
 
-/*  
-===========================================
-🔥 FIXED CORS — REQUIRED FOR Render Hosting
-===========================================
-*/
-const allowedOrigins = [
-    "http://localhost:3000",
-    "http://localhost:5173",
-    "https://studybuddy-kc2m.onrender.com",  // FRONTEND PRODUCTION
-];
+    // Development: allow all origins
+    if (process.env.NODE_ENV !== 'production') {
+      return callback(null, true);
+    }
 
-app.use(
-    cors({
-        origin: function (origin, callback) {
-            if (!origin) return callback(null, true); // mobile apps, curl, postman
+    // Production: check whitelist
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.warn(`⚠️ CORS blocked origin: ${origin}`);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  optionsSuccessStatus: 200
+};
 
-            if (allowedOrigins.includes(origin)) {
-                return callback(null, true);
-            }
+app.use(cors(corsOptions))
+// Log CORS activity
+app.use((req, res, next) => {
+  console.log(`[CORS] ${req.method} ${req.path} - Origin: ${req.get('origin') || 'no-origin'}`);
+  next();
+});
+app.use(morgan("dev"))
+app.use(session({
+    secret: process.env.SESSION_SECRET || '#$%^&*($%^&*I',
+    resave:false,
+    saveUninitialized:false
+}))
+app.use(express.json())
+app.use(express.urlencoded({extended:false}))
+app.use(PasspORt.initialize())
+app.use(PasspORt.session())
 
-            console.log("⛔ BLOCKED ORIGIN:", origin);
-            return callback(new Error("CORS blocked"));
-        },
-        credentials: true,
-        methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-        allowedHeaders: ["Content-Type", "Authorization"],
-    })
-);
-
-// Preflight support
-app.options("*", cors());
-
-/* ====================================== */
-
-app.use(morgan("dev"));
-app.use(
-    session({
-        secret: process.env.SESSION_SECRET || "#$%^&*($%^&*I",
-        resave: false,
-        saveUninitialized: false,
-    })
-);
-
-app.use(express.json({ limit: "50mb" }));
-app.use(express.urlencoded({ extended: false, limit: "50mb" }));
-
-app.use(PasspORt.initialize());
-app.use(PasspORt.session());
-
-// Google Strategy
+// streagy use karne ke liye
 if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
-    PasspORt.use(GoogleProvider);
+    PasspORt.use(GoogleProvider)
 } else {
-    console.log("Google OAuth not configured - skipping Google strategy");
+    console.log("Google OAuth not configured - skipping Google strategy")
 }
 
-/* =======================
-   ROUTES
-======================= */
-
-// Auth
+// Root auth router
 app.use("/api/v1/auth", require("./router/index.router"));
 
-
-// Modules
+// Module routes are mounted directly for better path handling
 app.use("/api/v1/auth/modules", require("./router/module.router"));
 
-// Leaderboard, user, points
-app.use("/api/leaderboard", require("./router/leaderboard.router"));
-app.use("/api/user", require("./router/user.router"));
-app.use("/api/points", require("./router/points.router"));
+// Expose leaderboard, user and points endpoints at top-level /api paths for frontend
+app.use('/api/leaderboard', require('./router/leaderboard.router'));
+app.use('/api/user', require('./router/user.router'));
+app.use('/api/points', require('./router/points.router'));
 
-// Test
-app.use("/api/test", require("./router/test.router"));
-
-// AI Routes
+// Mount test routes with more specific path
+const testRouter = require('./router/test.router');
+app.use('/api/test', testRouter);
+console.log('Test routes mounted at /api/test');
+// AI routes with separate Gemini API key for doubt solving
 app.use("/api/v1/ai", require("./router/ai.router"));
 
-// QPP
-app.use("/api/v1/qpp", require("./router/qpp.router"));
+// QPP (Question Paper Preparation) routes
+const qppRouter = require("./router/qpp.router");
+app.use("/api/v1/qpp", (req, res, next) => {
+  console.log(`[App] QPP route hit: ${req.method} ${req.originalUrl}`);
+  next();
+}, qppRouter);
+console.log('QPP routes mounted at /api/v1/qpp');
+console.log('Available QPP routes:', [
+  'POST /api/v1/qpp/generate',
+  'POST /api/v1/qpp/download/pdf',
+  'POST /api/v1/qpp/download/word',
+  'GET /api/v1/qpp/test',
+  'GET /api/v1/qpp/download/test',
+  'POST /api/v1/qpp/download/test-post'
+].join(', '));
 
 // Game routes
-app.use("/api/v1/game", require("./router/game.router"));
+const gameRouter = require("./router/game.router");
+app.use("/api/v1/game", gameRouter);
+console.log('Game routes mounted at /api/v1/game');
+console.log('Available game routes:', [
+  'GET /api/v1/game/missions',
+  'POST /api/v1/game/missions/:id/claim',
+  'POST /api/v1/game/progress/update',
+  'POST /api/v1/game/score',
+  'POST /api/v1/game/unlock',
+  'GET /api/v1/game/time-status',
+  'POST /api/v1/game/start',
+  'POST /api/v1/game/end'
+].join(', '));
 
-// Root
+// Root route
 app.get("/", (req, res) => {
     res.json({
-        message: "StudyBuddy API Running",
+        message: "Mix Authentication API is running!",
         endpoints: {
             auth: "/api/v1/auth",
-            qpp: "/api/v1/qpp",
-        },
+            google: "/api/v1/auth/google",
+            register: "/api/v1/auth/register",
+            login: "/api/v1/auth/login",
+            profile: "/api/v1/auth/profile",
+            qpp: "/api/v1/qpp"
+        }
     });
 });
 
-// Global 404
+// Global 404 handler (must be last)
 app.use((req, res) => {
-    console.log(`[404] Route not found → ${req.method} ${req.originalUrl}`);
+    console.log(`[App] 404 - Route not found: ${req.method} ${req.originalUrl}`);
     res.status(404).json({
         success: false,
-        error: "Route not found",
-        path: req.originalUrl,
+        error: 'Route not found',
+        method: req.method,
+        path: req.originalUrl
     });
 });
 
-module.exports = app;
+module.exports = app
