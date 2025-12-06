@@ -68,7 +68,8 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
 ======================= */
 
 // Auth
-app.use("/api/v1/auth", require("./router/index.router"));
+app.use("/api/v1", require("./router/index.router"));
+
 
 // Modules
 app.use("/api/v1/auth/modules", require("./router/module.router"));
