@@ -5,7 +5,7 @@ async function sendResetEmail(to, resetUrl){
   
     const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST || "smtp.gmail.com",
-  port: 587,
+  port: 2525,
   secure: false,
   auth: {
     user: process.env.SMTP_USER,
