@@ -11,6 +11,21 @@ import useAuth from '../hooks/useAuth';
 const API_BASE = process.env.REACT_APP_API_BASE || 'https://studybuddy-backend-i649.onrender.com/api/v1';
 
 const ModulesPage = () => {
+  // Ensure API_BASE always has /api/v1 prefix
+  const getAPIBase = () => {
+    let base = process.env.REACT_APP_API_BASE || '';
+    if (!base) {
+      // Default for local development
+      base = 'http://localhost:8080/api/v1';
+    }
+    // Ensure it ends with /api/v1
+    if (!base.includes('/api/v1')) {
+      base = base.replace(/\/$/, '') + '/api/v1';
+    }
+    return base;
+  };
+  
+  const API_BASE = getAPIBase();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { user, setUser, token } = useAuth();
