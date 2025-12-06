@@ -4,7 +4,7 @@
  */
 
 export const getApiBase = () => {
-  let apiBase = process.env.REACT_APP_API_BASE || 'https://studybuddy-backend-i649.onrender.com/api/v1';
+  let apiBase = process.env.REACT_APP_API_BASE || 'https://studybuddy-peach-eight.vercel.app/api/v1';
   
   // Remove trailing slash if present
   apiBase = apiBase.replace(/\/$/, '');
