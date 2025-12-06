@@ -17,11 +17,7 @@ self.addEventListener('install', (event) => {
         console.log('Opened cache');
         return cache.addAll(urlsToCache);
       })
-      .catch((error) => {
-        console.log('Cache install failed:', error);
-      })
   );
-  // Force the waiting service worker to become the active service worker
   self.skipWaiting();
 });
 
@@ -32,25 +28,29 @@ self.addEventListener('activate', (event) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
           if (cacheName !== CACHE_NAME) {
-            console.log('Deleting old cache:', cacheName);
             return caches.delete(cacheName);
           }
         })
       );
     })
   );
-  // Take control of all pages immediately
-  return self.clients.claim();
+  self.clients.claim();
 });
 
-// Fetch event - serve from cache, fallback to network
+// Fetch event - DO NOT intercept API calls
 self.addEventListener('fetch', (event) => {
+  const url = new URL(event.request.url);
+
+  // 🚫 Skip /api requests (let them reach backend)
+  if (url.pathname.startsWith('/api')) {
+    return;
+  }
+
+  // ✔ Otherwise: cache-first strategy
   event.respondWith(
     caches.match(event.request)
       .then((response) => {
-        // Return cached version or fetch from network
         return response || fetch(event.request).catch(() => {
-          // If both cache and network fail, return offline page if available
           if (event.request.destination === 'document') {
             return caches.match('/login');
           }
@@ -58,4 +58,3 @@ self.addEventListener('fetch', (event) => {
       })
   );
 });
-
