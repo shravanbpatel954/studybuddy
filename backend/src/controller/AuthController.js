@@ -1,3 +1,4 @@
+
 const crypto = require('crypto')
 const UserModel = require("../models/User.mdoels")
 const { JWTService, verifyToken } = require("../utils/jwt")
@@ -233,7 +234,11 @@ exports.ForgotPassword = async (req, res) => {
         if (!email) return res.status(400).json({ error: 'Email is required' });
 
         const user = await UserModel.findOne({ email });
-        if (!user) return res.status(200).json({ message: 'If that email exists, a reset link has been sent' });
+        if (!user) {
+            // Security: don't reveal whether email exists
+            console.log(`Password reset attempt for non-existent email: ${email}`);
+            return res.status(200).json({ message: 'If that email exists, a reset link has been sent' });
+        }
 
         // generate token
         const token = crypto.randomBytes(32).toString('hex');
@@ -243,13 +248,23 @@ exports.ForgotPassword = async (req, res) => {
         await user.save();
 
         // send email
-  
-        const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${token}&email=${encodeURIComponent(email)}`
+        const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${token}&email=${encodeURIComponent(email)}`;
 
-        await sendResetEmail(email, resetUrl);
+        try {
+            await sendResetEmail(email, resetUrl);
+            console.log(`✅ Password reset email sent to: ${email}`);
+        } catch (emailError) {
+            console.error(`⚠️ Failed to send reset email to ${email}:`, emailError.message);
+            // Log the error but don't fail the request - token is already saved
+            // This way users know to check their email even if sending failed
+            // In production, you might want to alert admins or use a fallback service
+            console.error('Email service error - user token saved, email may need manual resend');
+            // Still return success to user as token is saved
+        }
 
         return res.status(200).json({ message: 'If that email exists, a reset link has been sent' });
     } catch (error) {
+        console.error('ForgotPassword error:', error);
         return res.status(500).json({ error: error.message });
     }
 }
@@ -277,3 +292,4 @@ exports.ResetPassword = async (req, res) => {
         return res.status(500).json({ error: error.message });
     }
 }
+
