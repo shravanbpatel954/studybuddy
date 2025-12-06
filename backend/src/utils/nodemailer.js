@@ -1,30 +1,25 @@
-const nodemailer = require('nodemailer')
+import nodemailer from "nodemailer";
 
-async function sendResetEmail(to, resetUrl){
-    // create transporter using env vars
+export const sendPasswordResetEmail = async (email, resetLink) => {
     const transporter = nodemailer.createTransport({
-        host: process.env.SMTP_HOST || 'smtp.gmail.com',
-        port: process.env.SMTP_PORT ? Number(process.env.SMTP_PORT) : 465,
-        secure: process.env.SMTP_SECURE ? process.env.SMTP_SECURE === 'true' : true,
+        service: "gmail", // You can use other services as well like SendGrid or Mailgun
         auth: {
-            user: process.env.SMTP_USER,
-            pass: process.env.SMTP_PASS
-        }
-    })
+            user: process.env.EMAIL_USERNAME,
+            pass: process.env.EMAIL_PASSWORD,
+        },
+    });
 
-    const html = `
-        <p>You requested a password reset.</p>
-        <p>Click the link below to reset your password (valid for 1 hour):</p>
-        <p><a href="${resetUrl}">${resetUrl}</a></p>
-        <p>If you didn't request this, you can ignore this email.</p>
-    `
+    const mailOptions = {
+        from: process.env.EMAIL_USERNAME,
+        to: email,
+        subject: "Password Reset Request",
+        text: `To reset your password, click the following link: ${resetLink}`,
+    };
 
-    await transporter.sendMail({
-        from: process.env.SMTP_FROM || process.env.SMTP_USER,
-        to,
-        subject: 'Password reset',
-        html
-    })
-}
-
-module.exports = { sendResetEmail }
+    try {
+        await transporter.sendMail(mailOptions);
+        console.log("Password reset email sent successfully");
+    } catch (error) {
+        console.log("Error sending email: ", error);
+    }
+};
