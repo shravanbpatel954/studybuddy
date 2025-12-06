@@ -4,36 +4,71 @@ import { useNavigate, Link } from "react-router-dom";
 import { getApiBase } from "../utils/apiConfig";
 import "./Login.css";
 
-function PasswordResetModal({ show, message, onClose }) {
-  if (!show) return null;
+function SuccessModal({ open, message, onClose }) {
+  if (!open) return null;
+
   return (
     <div className="modal-overlay">
-      <div className="custom-modal">
-        <div style={{ fontWeight: "bold", fontSize: 18, marginBottom: 8 }}></div>
-        <div style={{ marginBottom: 22 }}>{message}</div>
-        <button className="modal-ok-btn" onClick={onClose}>
+      <motion.div
+        className="custom-modal"
+        initial={{ scale: 0.7, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+      >
+        <h3 className="modal-title">Email Sent!</h3>
+        <p className="modal-message">{message}</p>
+
+        <motion.button className="modal-ok-btn" onClick={onClose} whileTap={{ scale: 0.9 }}>
           OK
-        </button>
-      </div>
+        </motion.button>
+      </motion.div>
+    </div>
+  );
+}
+
+function ForgotEmailModal({ open, email, setEmail, onSubmit, onClose }) {
+  if (!open) return null;
+
+  return (
+    <div className="modal-overlay">
+      <motion.div
+        className="custom-modal"
+        initial={{ scale: 0.7, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+      >
+        <h3 className="modal-title">Forgot your password?</h3>
+        <p className="modal-message">Enter your registered email. We will send you a reset link.</p>
+
+        <input
+          type="email"
+          className="modal-input"
+          placeholder="Enter your email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+
+        <motion.button className="modal-send-btn" onClick={onSubmit} whileTap={{ scale: 0.95 }}>
+          Send Reset Link
+        </motion.button>
+
+        <button className="modal-cancel" onClick={onClose}>Cancel</button>
+      </motion.div>
     </div>
   );
 }
 
 export default function Login() {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const navigate = useNavigate();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const [forgotOpen, setForgotOpen] = useState(false);
+  const [resetSuccessOpen, setResetSuccessOpen] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState("");
 
   const handleInputChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleSubmit = async (e) => {
@@ -41,27 +76,28 @@ export default function Login() {
     setLoading(true);
     setError("");
 
-    let submitFormData = { ...formData };
-    if (submitFormData.email)
-      submitFormData.email = submitFormData.email.trim().toLowerCase();
+    const payload = {
+      email: formData.email.trim().toLowerCase(),
+      password: formData.password,
+    };
 
     try {
       const apiBase = getApiBase();
-      const response = await fetch(`${apiBase}/auth/login`, {
+      const res = await fetch(`${apiBase}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(submitFormData),
+        body: JSON.stringify(payload),
       });
 
-      const data = await response.json();
+      const data = await res.json();
 
-      if (response.ok) {
+      if (res.ok) {
         localStorage.setItem("token", data.token);
         navigate("/dashboard");
       } else {
-        setError(data.error || "An error occurred");
+        setError(data.error || "Invalid email or password");
       }
-    } catch (err) {
+    } catch {
       setError("Network error. Please try again.");
     } finally {
       setLoading(false);
@@ -69,86 +105,106 @@ export default function Login() {
   };
 
   const handleGoogleLogin = () => {
-    try { localStorage.setItem('postLoginRedirect', '/dashboard'); } catch (e) { /* ignore */ }
-    // add mode=signin so backend (if needed) can distinguish flows
     const apiBase = getApiBase();
+    localStorage.setItem("postLoginRedirect", "/dashboard");
     window.location.href = `${apiBase}/auth/google?mode=signin`;
   };
 
-  const handleForgotPassword = async () => {
-    const email = formData.email.trim().toLowerCase();
-    if (!email) {
-      setError("Please enter your email address first");
+  const handleForgotPassword = () => {
+    setForgotEmail(formData.email.trim().toLowerCase());
+    setForgotOpen(true);
+  };
+
+  const submitForgotPassword = async () => {
+    if (!forgotEmail) {
+      alert("Please enter your email.");
       return;
     }
+
     try {
       const apiBase = getApiBase();
       await fetch(`${apiBase}/auth/forgot`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email: forgotEmail }),
       });
-      setIsModalOpen(true);
+
+      setForgotOpen(false);
+      setResetSuccessOpen(true);
     } catch {
-      setIsModalOpen(true);
+      setForgotOpen(false);
+      setResetSuccessOpen(true);
     }
   };
 
   return (
     <div className="login-container">
-      <PasswordResetModal
-        show={isModalOpen}
-        message="If that email exists, a reset link has been sent"
-        onClose={() => setIsModalOpen(false)}
+
+      <div className="aurora-bg"></div>
+
+      <ForgotEmailModal
+        open={forgotOpen}
+        email={forgotEmail}
+        setEmail={setForgotEmail}
+        onSubmit={submitForgotPassword}
+        onClose={() => setForgotOpen(false)}
       />
+
+      <SuccessModal
+        open={resetSuccessOpen}
+        message="If this email exists, a reset link has been sent."
+        onClose={() => setResetSuccessOpen(false)}
+      />
+
       <motion.form
         className="login-card"
-        initial={{ opacity: 0, y: -50 }}
+        initial={{ opacity: 0, y: -40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
+        whileHover={{ scale: 1.01 }}
         onSubmit={handleSubmit}
       >
-  <h2 className="login-title">Login</h2>
+        <h2 className="login-title">Welcome Back</h2>
 
         {error && <div className="error-message">{error}</div>}
 
-        {/* Signup handled on separate page */}
+        <div className="input-group">
+          <input
+            required
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleInputChange}
+            placeholder=" "
+          />
+          <label>Email</label>
+        </div>
 
-        <label>Email:</label>
-        <input
-          type="email"
-          name="email"
-          placeholder="Enter your email"
-          value={formData.email}
-          onChange={handleInputChange}
-          required
-        />
-
-        <label>Password:</label>
-        <input
-          type="password"
-          name="password"
-          placeholder="Enter your password"
-          value={formData.password}
-          onChange={handleInputChange}
-          required
-        />
+        <div className="input-group">
+          <input
+            required
+            type="password"
+            name="password"
+            value={formData.password}
+            onChange={handleInputChange}
+            placeholder=" "
+          />
+          <label>Password</label>
+        </div>
 
         <motion.button
           type="submit"
-          className="btn-login"
-          whileHover={{ scale: 1.05, boxShadow: "0 0 15px #00e0ff" }}
-          whileTap={{ scale: 0.95 }}
+          className="btn-login animated-btn"
           disabled={loading}
+          whileTap={{ scale: 0.95 }}
         >
           {loading ? "Processing..." : "Login"}
         </motion.button>
 
         <motion.button
           type="button"
-          className="btn-google"
+          className="btn-google animated-btn"
           onClick={handleGoogleLogin}
-          whileHover={{ scale: 1.05, boxShadow: "0 0 15px #ff4b4b" }}
           whileTap={{ scale: 0.95 }}
         >
           Sign in with Google
@@ -160,10 +216,10 @@ export default function Login() {
 
         <div className="login-links">
           <p>
-            Don't have an account?{' '}
-            <Link to="/signup">Sign Up</Link>
+            Don’t have an account? <Link to="/signup">Sign Up</Link>
           </p>
         </div>
+
       </motion.form>
     </div>
   );
