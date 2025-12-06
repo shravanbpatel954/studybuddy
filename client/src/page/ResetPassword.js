@@ -24,7 +24,7 @@ const ResetPassword = () => {
     if (password !== confirm) return setMessage('Passwords do not match');
 
     try {
-      const apiBase = process.env.REACT_APP_API_BASE || 'https://studybuddy-backend-i649.onrender.com/api/v1';
+      const apiBase = 'https://studybuddy-backend-i649.onrender.com/api/v1';
       const res = await fetch(`${apiBase}/auth/reset`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
