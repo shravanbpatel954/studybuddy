@@ -19,18 +19,17 @@ root.render(
   </React.StrictMode>
 );
 
-// ❌ Disable service worker (Fix API not calling backend on Render)
-// CRA’s PWA service worker was intercepting API calls like /api/v1/auth/forgot
-// Removing it ensures backend receives all requests correctly.
+// 🔥 OPTION 1 FIX: Disable all service workers (prevents API interception on Render)
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.getRegistrations().then(regs => {
-    regs.forEach(reg => reg.unregister());
+  navigator.serviceWorker.getRegistrations().then((registrations) => {
+    registrations.forEach((registration) => {
+      registration.unregister();
+    });
   });
 }
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint.
 reportWebVitals();
+
+
 
 
