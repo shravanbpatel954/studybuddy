@@ -1,59 +1,66 @@
-const CACHE_NAME = 'studybuddy-v4';
-
+const CACHE_NAME = 'lakshwear-v1';
 const urlsToCache = [
   '/',
-  '/login',
+  '/index.html',
   '/manifest.json',
+  '/favicon.ico',
   '/logo192.png',
-  '/logo512.png'
+  '/logo512.png',
 ];
 
-// Install
-self.addEventListener('install', event => {
+// Install service worker
+self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))
+    caches.open(CACHE_NAME)
+      .then((cache) => {
+        console.log('Opened cache');
+        return cache.addAll(urlsToCache);
+      })
   );
-  self.skipWaiting();
 });
 
-// Activate
-self.addEventListener('activate', event => {
-  event.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(
-        keys.map(key => key !== CACHE_NAME && caches.delete(key))
-      )
-    )
-  );
-  self.clients.claim();
-});
-
-// Fetch
-self.addEventListener('fetch', event => {
-  const url = new URL(event.request.url);
-
-  // 1. Don't touch API requests
-  if (url.pathname.startsWith('/api')) return;
-
-  // 2. React Router navigation requests fallback to "/"
-  if (event.request.mode === 'navigate') {
-    event.respondWith(
-      fetch(event.request).catch(() => caches.match('/'))
-    );
-    return;
-  }
-
-  // 3. Static assets cache-first
+// Listen for requests
+self.addEventListener('fetch', (event) => {
   event.respondWith(
-    caches.match(event.request).then(response => {
-      return (
-        response ||
-        fetch(event.request).catch(() => {
-          if (event.request.destination === 'document') {
-            return caches.match('/login');
+    caches.match(event.request)
+      .then((response) => {
+        // Cache hit - return response
+        if (response) {
+          return response;
+        }
+        return fetch(event.request)
+          .then((response) => {
+            // Check if we received a valid response
+            if (!response || response.status !== 200 || response.type !== 'basic') {
+              return response;
+            }
+
+            // Clone the response
+            const responseToCache = response.clone();
+
+            caches.open(CACHE_NAME)
+              .then((cache) => {
+                cache.put(event.request, responseToCache);
+              });
+
+            return response;
+          });
+      })
+  );
+});
+
+// Update service worker
+self.addEventListener('activate', (event) => {
+  const cacheWhitelist = [CACHE_NAME];
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cacheName) => {
+          if (cacheWhitelist.indexOf(cacheName) === -1) {
+            return caches.delete(cacheName);
           }
         })
       );
     })
   );
-});
+}); 
