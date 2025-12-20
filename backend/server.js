@@ -46,7 +46,7 @@ try {
     
     let app;
     try {
-        app = require("./src/app");
+        app = require("./src/App");
         console.log("App loaded successfully")
     } catch (err) {
         console.error("Error loading app:", err.message);
