@@ -1,0 +1,345 @@
+```json
+{
+    "subject": "Diversity of Living Organisms",
+    "chapters": [
+        {
+            "id": "1",
+            "name": "The Living World",
+            "difficulty": "beginner",
+            "sections": [
+                {
+                    "id": "1.1",
+                    "name": "What is Living?",
+                    "difficulty": "beginner",
+                    "subsections": [
+                        {
+                            "id": "1.1.1",
+                            "name": "Defining Characteristics of Life",
+                            "type": "concept",
+                            "content": {
+                                "description": "Exploration of fundamental properties that distinguish living organisms from non-living matter, focusing on growth, reproduction, metabolism, cellular organization, and consciousness.",
+                                "key_points": [
+                                    "Growth: Increase in mass and number of individuals.",
+                                    "Reproduction: Production of progeny similar to parents.",
+                                    "Metabolism: Sum total of all chemical reactions occurring in a body.",
+                                    "Cellular Organization: All living organisms are made of cells.",
+                                    "Consciousness: Ability to sense environment and respond."
+                                ],
+                                "examples": [
+                                    "A plant growing taller (growth)",
+                                    "Bacteria dividing (reproduction)",
+                                    "Digestion of food (metabolism)",
+                                    "A human reacting to light (consciousness)"
+                                ],
+                                "difficulty": "beginner"
+                            }
+                        },
+                        {
+                            "id": "1.1.2",
+                            "name": "Defining vs. Non-Defining Properties",
+                            "type": "concept",
+                            "content": {
+                                "description": "Distinguishing between properties that are universally present in all living organisms without exception (defining) and those that are not (non-defining).",
+                                "key_points": [
+                                    "Metabolism, cellular organization, and consciousness are defining properties.",
+                                    "Growth and reproduction are non-defining properties due to exceptions (e.g., sterile organisms, non-living growth)."
+                                ],
+                                "examples": [
+                                    "Mules are sterile but living (reproduction is non-defining).",
+                                    "Mountains grow by accretion (growth is non-defining for living things)."
+                                ],
+                                "difficulty": "beginner"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "1.2",
+                    "name": "Diversity in the Living World",
+                    "difficulty": "beginner",
+                    "subsections": [
+                        {
+                            "id": "1.2.1",
+                            "name": "Biodiversity and its Significance",
+                            "type": "concept",
+                            "content": {
+                                "description": "Understanding the vast number and variety of living organisms on Earth, known as biodiversity, and the necessity for systematic study.",
+                                "key_points": [
+                                    "Biodiversity refers to the variety of life forms and their habitats.",
+                                    "Millions of species exist, many yet to be discovered.",
+                                    "Systematic study is crucial for understanding relationships and conservation."
+                                ],
+                                "examples": [
+                                    "Estimates suggest 1.7 to 1.8 million known species.",
+                                    "Rainforests are hotspots of biodiversity."
+                                ],
+                                "difficulty": "beginner"
+                            }
+                        },
+                        {
+                            "id": "1.2.2",
+                            "name": "Nomenclature and Identification",
+                            "type": "definition",
+                            "content": {
+                                "description": "The process of naming organisms (nomenclature) and accurately determining their identity (identification) using standardized rules.",
+                                "key_points": [
+                                    "Nomenclature provides a universal naming system.",
+                                    "Identification ensures correct placement of an organism.",
+                                    "Binomial nomenclature (Genus species) is the standard system."
+                                ],
+                                "examples": [
+                                    "Homo sapiens for humans.",
+                                    "Mangifera indica for mango."
+                                ],
+                                "difficulty": "beginner"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "1.3",
+                    "name": "Taxonomic Categories",
+                    "difficulty": "intermediate",
+                    "subsections": [
+                        {
+                            "id": "1.3.1",
+                            "name": "Hierarchy of Classification",
+                            "type": "concept",
+                            "content": {
+                                "description": "The arrangement of organisms into a series of decreasingly inclusive ranks or categories, from Kingdom to Species.",
+                                "key_points": [
+                                    "Taxonomic hierarchy: Kingdom > Phylum/Division > Class > Order > Family > Genus > Species.",
+                                    "Each category represents a rank or taxon.",
+                                    "Species is the lowest and most specific category."
+                                ],
+                                "examples": [
+                                    "Human classification: Kingdom Animalia, Phylum Chordata, Class Mammalia, Order Primates, Family Hominidae, Genus Homo, Species sapiens."
+                                ],
+                                "difficulty": "intermediate"
+                            }
+                        },
+                        {
+                            "id": "1.3.2",
+                            "name": "Taxon and its Significance",
+                            "type": "definition",
+                            "content": {
+                                "description": "A taxon is a taxonomic group of any rank, such as a species, family, or class, that is sufficiently distinct to be worthy of being assigned to a definite category.",
+                                "key_points": [
+                                    "Each level in the hierarchy is a taxon.",
+                                    "Taxa are based on observable characteristics.",
+                                    "Helps in organizing and studying biodiversity."
+                                ],
+                                "examples": [
+                                    "Mammalia is a taxon at the class level.",
+                                    "Primates is a taxon at the order level."
+                                ],
+                                "difficulty": "beginner"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "1.4",
+                    "name": "Taxonomical Aids",
+                    "difficulty": "intermediate",
+                    "subsections": [
+                        {
+                            "id": "1.4.1",
+                            "name": "Herbarium",
+                            "type": "application",
+                            "content": {
+                                "description": "A collection of preserved plant specimens mounted on sheets, systematically arranged, and available for study.",
+                                "key_points": [
+                                    "Provides a quick reference system for plant identification.",
+                                    "Specimens are dried, pressed, and preserved.",
+                                    "Includes information like collection date, place, and collector's name."
+                                ],
+                                "examples": [
+                                    "Royal Botanic Gardens, Kew Herbarium (UK)",
+                                    "Indian Botanical Garden, Howrah Herbarium (India)"
+                                ],
+                                "difficulty": "beginner"
+                            }
+                        },
+                        {
+                            "id": "1.4.2",
+                            "name": "Botanical Gardens",
+                            "type": "application",
+                            "content": {
+                                "description": "Specialized gardens that have collections of living plants for reference, identification, and research purposes.",
+                                "key_points": [
+                                    "Provide living plant material for study.",
+                                    "Plants are labeled with their botanical and common names.",
+                                    "Contribute to ex-situ conservation."
+                                ],
+                                "examples": [
+                                    "Royal Botanic Gardens, Kew (UK)",
+                                    "National Botanical Research Institute, Lucknow (India)"
+                                ],
+                                "difficulty": "beginner"
+                            }
+                        },
+                        {
+                            "id": "1.4.3",
+                            "name": "Zoological Parks and Museums",
+                            "type": "application",
+                            "content": {
+                                "description": "Zoological parks (zoos) house living wild animals, while museums contain collections of preserved plant and animal specimens for study and display.",
+                                "key_points": [
+                                    "Zoos provide insights into animal behavior and conservation.",
+                                    "Museums preserve specimens (dried, in preservative solutions) for long-term study.",
+                                    "Both serve as educational and research tools."
+                                ],
+                                "examples": [
+                                    "Delhi Zoo (Zoological Park)",
+                                    "Natural History Museum, London (Museum)"
+                                ],
+                                "difficulty": "beginner"
+                            }
+                        },
+                        {
+                            "id": "1.4.4",
+                            "name": "Taxonomic Keys",
+                            "type": "application",
+                            "content": {
+                                "description": "Analytical tools used for identification of organisms based on similarities and dissimilarities, typically in the form of dichotomous keys.",
+                                "key_points": [
+                                    "Based on contrasting characters in a pair (couplet).",
+                                    "Each statement in the key is called a lead.",
+                                    "Helps in identifying unknown organisms systematically."
+                                ],
+                                "examples": [
+                                    "A key to identify different types of insects based on number of wings or legs."
+                                ],
+                                "difficulty": "intermediate"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "2",
+            "name": "Biological Classification",
+            "difficulty": "intermediate",
+            "sections": [
+                {
+                    "id": "2.1",
+                    "name": "Early Systems of Classification",
+                    "difficulty": "beginner",
+                    "subsections": [
+                        {
+                            "id": "2.1.1",
+                            "name": "Aristotle's Classification",
+                            "type": "concept",
+                            "content": {
+                                "description": "One of the earliest attempts at scientific classification, based on simple morphological characters.",
+                                "key_points": [
+                                    "Classified plants into trees, shrubs, and herbs.",
+                                    "Classified animals into those with red blood and those without.",
+                                    "Laid groundwork for later systems."
+                                ],
+                                "examples": [
+                                    "Animals with red blood: mammals, birds, fish.",
+                                    "Animals without red blood: insects, worms."
+                                ],
+                                "difficulty": "beginner"
+                            }
+                        },
+                        {
+                            "id": "2.1.2",
+                            "name": "Two-Kingdom Classification (Linnaeus)",
+                            "type": "concept",
+                            "content": {
+                                "description": "Proposed by Carolus Linnaeus, dividing all living organisms into two kingdoms: Plantae and Animalia.",
+                                "key_points": [
+                                    "Based on presence/absence of cell wall and locomotion.",
+                                    "Plantae: organisms with cell walls, no locomotion.",
+                                    "Animalia: organisms without cell walls, with locomotion."
+                                ],
+                                "examples": [
+                                    "Plantae: trees, grasses, fungi, bacteria.",
+                                    "Animalia: humans, insects, fish."
+                                ],
+                                "difficulty": "beginner"
+                            }
+                        },
+                        {
+                            "id": "2.1.3",
+                            "name": "Limitations of Two-Kingdom Classification",
+                            "type": "concept",
+                            "content": {
+                                "description": "The two-kingdom system failed to distinguish between several important groups of organisms, leading to its eventual replacement.",
+                                "key_points": [
+                                    "Did not differentiate between prokaryotes and eukaryotes.",
+                                    "Did not differentiate between unicellular and multicellular organisms.",
+                                    "Did not differentiate between photosynthetic (plants) and non-photosynthetic (fungi) organisms."
+                                ],
+                                "examples": [
+                                    "Bacteria (prokaryote) and Fungi (eukaryote) were both placed in Plantae.",
+                                    "Chlamydomonas (unicellular) and Spirogyra (multicellular) were both in Plantae."
+                                ],
+                                "difficulty": "intermediate"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "2.2",
+                    "name": "Five-Kingdom Classification",
+                    "difficulty": "intermediate",
+                    "subsections": [
+                        {
+                            "id": "2.2.1",
+                            "name": "R.H. Whittaker's System",
+                            "type": "concept",
+                            "content": {
+                                "description": "Proposed in 1969, this system classified organisms into five kingdoms: Monera, Protista, Fungi, Plantae, and Animalia, based on several key criteria.",
+                                "key_points": [
+                                    "Criteria: Cell structure (prokaryotic/eukaryotic), Thallus organization (unicellular/multicellular), Mode of nutrition (autotrophic/heterotrophic), Reproduction, Phylogenetic relationships.",
+                                    "Addressed limitations of earlier systems.",
+                                    "Widely accepted as a foundational classification."
+                                ],
+                                "examples": [
+                                    "Monera: Bacteria (prokaryotic, unicellular)",
+                                    "Fungi: Mushrooms (eukaryotic, multicellular, heterotrophic)"
+                                ],
+                                "difficulty": "intermediate"
+                            }
+                        },
+                        {
+                            "id": "2.2.2",
+                            "name": "Overview of Five Kingdoms",
+                            "type": "definition",
+                            "content": {
+                                "description": "A brief introduction to the characteristics of each of the five kingdoms.",
+                                "key_points": [
+                                    "Monera: Prokaryotic, unicellular.",
+                                    "Protista: Eukaryotic, unicellular.",
+                                    "Fungi: Eukaryotic, multicellular (mostly), heterotrophic.",
+                                    "Plantae: Eukaryotic, multicellular, autotrophic.",
+                                    "Animalia: Eukaryotic, multicellular, heterotrophic."
+                                ],
+                                "examples": [
+                                    "Monera: E. coli",
+                                    "Protista: Amoeba",
+                                    "Fungi: Yeast",
+                                    "Plantae: Rose",
+                                    "Animalia: Dog"
+                                ],
+                                "difficulty": "beginner"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "2.3",
+                    "name": "Kingdom Monera",
+                    "difficulty": "intermediate",
+                    "subsections": [
+                        {
+                            "id": "2.3.1",
+                            "name": "Characteristics of Monerans",
+                            "type": "definition",
+                            "content": {
+                                "description": "Detailed features of organisms belo

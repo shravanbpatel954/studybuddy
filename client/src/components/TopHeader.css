@@ -1,0 +1,120 @@
+.top-header {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background: linear-gradient(135deg, #0f1217 0%, #1a1f2e 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 999;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Adjust top position when PWA prompt is visible */
+body:has(.pwa-install-prompt) .top-header {
+  top: 60px;
+}
+
+@media (max-width: 768px) {
+  body:has(.pwa-install-prompt) .top-header {
+    top: 56px;
+  }
+}
+
+.top-header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.top-header-back-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #fff;
+  font-size: 20px;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  margin-right: 12px;
+}
+
+.top-header-back-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}
+
+.top-header-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: inherit;
+  flex: 1;
+}
+
+.top-header-logo-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+}
+
+.top-header-title {
+  font-size: 20px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #00e0ff 0%, #b9bfff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.top-header-spacer {
+  width: 36px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .top-header-content {
+    padding: 10px 16px;
+  }
+
+  .top-header-logo-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .top-header-title {
+    font-size: 18px;
+  }
+
+  .top-header-back-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 18px;
+    margin-right: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .top-header-content {
+    padding: 8px 12px;
+  }
+
+  .top-header-title {
+    font-size: 16px;
+  }
+
+  .top-header-logo-icon {
+    width: 24px;
+    height: 24px;
+  }
+}
+

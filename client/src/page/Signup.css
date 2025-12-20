@@ -1,0 +1,199 @@
+/* Signup page styles copied from Login.css and adjusted to .signup- classes */
+.signup-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: url('login-bg.jpg') no-repeat center center;
+  background-size: cover;
+  background-color: #0f2027;
+  font-family: "Poppins", sans-serif;
+  position: relative;
+  overflow: hidden;
+  padding-top: 0;
+}
+
+.signup-container .signup-card {
+  margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+  .signup-container .signup-card {
+    margin-top: 10px;
+  }
+}
+
+.signup-container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 32, 39, 0.85);
+  z-index: 0;
+}
+
+.signup-card {
+  position: relative;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 45px 40px;
+  width: 360px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+}
+
+.signup-title {
+  text-align: center;
+  font-size: 30px;
+  margin-bottom: 25px;
+  background: linear-gradient(90deg, #00e0ff, #7f5eff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.signup-card label {
+  font-size: 15px;
+  margin-bottom: 6px;
+}
+
+.signup-card input {
+  padding: 12px 14px;
+  margin-bottom: 22px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  transition: all 0.3s ease;
+}
+
+.signup-card input::placeholder {
+  color: #ccc;
+}
+
+.signup-card input:focus {
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 10px #00e0ff;
+}
+
+.btn-signup,
+.btn-google {
+  width: 100%;
+  padding: 12px 16px;
+  margin-bottom: 18px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-signup {
+  background: linear-gradient(90deg, #00e0ff, #7f5eff);
+  color: #fff;
+}
+
+.btn-google {
+  background: linear-gradient(90deg, #ff4b4b, #ff6b6b);
+  color: #fff;
+}
+
+.signup-links {
+  text-align: center;
+  font-size: 14px;
+}
+
+.signup-links a {
+  color: #00e0ff;
+  text-decoration: none;
+}
+
+.signup-links a:hover {
+  text-decoration: underline;
+}
+
+.signup-links p {
+  margin-top: 10px;
+  color: #ccc;
+}
+
+.error-message {
+  background: rgba(255, 0, 0, 0.2);
+  color: #ff6b6b;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  text-align: center;
+  font-size: 14px;
+}
+
+/* Modal styles (shared) */
+.modal-overlay {
+  position: fixed;
+  z-index: 2000;
+  inset: 0;
+  background: rgba(0,0,0,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.custom-modal {
+  background: #F9FCEE;
+  color: #222;
+  border-radius: 18px;
+  padding: 32px 34px 24px 28px;
+  max-width: 480px;
+  min-width: 340px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.12);
+  border: 2px solid #f4f7e0;
+  display: flex;
+  flex-direction: column;
+  font-size: 16px;
+}
+.modal-ok-btn {
+  align-self: flex-end;
+  margin-top: 10px;
+  font-size: 16px;
+  background: #558143;
+  color: #fff;
+  border: 2.5px solid #32552d;
+  border-radius: 36px;
+  padding: 8px 28px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px #b7dac2;
+  transition: background .18s, box-shadow .18s;
+}
+.modal-ok-btn:hover {
+  background: #416e37;
+  box-shadow: 0 3px 10px #d9f2e0;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .signup-card { width: 70%; padding: 40px 30px; }
+}
+@media (max-width: 768px) {
+  .signup-card { width: 85%; padding: 35px 25px; }
+  .signup-title { font-size: 26px; }
+  .btn-signup, .btn-google { font-size: 0.95rem; padding: 10px 14px; }
+}
+@media (max-width: 480px) {
+  .signup-container { background: #0f2027; padding: 20px; }
+  .signup-card { width: 100%; padding: 28px 20px; border-radius: 16px; }
+  .signup-title { font-size: 22px; }
+  .signup-card input { font-size: 14px; padding: 10px 12px; }
+  .btn-signup, .btn-google { padding: 10px; font-size: 14px; }
+}
+
+@media (max-width: 360px) {
+  .signup-card { padding: 22px 16px; }
+  .signup-title { font-size: 20px; }
+  .signup-card input { font-size: 13px; }
+  .btn-signup, .btn-google { font-size: 13px; }
+}

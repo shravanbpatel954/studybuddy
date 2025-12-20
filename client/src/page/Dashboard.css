@@ -1,0 +1,420 @@
+/* Global: Prevent horizontal scrolling */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  overflow-x: hidden !important;
+  max-width: 100vw !important;
+  width: 100% !important;
+}
+
+/* Ensure dashboard fills entire screen */
+.dashboard {
+  min-height: 100vh;
+  width: 100vw;
+  max-width: 100vw;
+  background: linear-gradient(180deg, #0A0F1C 0%, #111827 100%);
+  color: #E6E6E6;
+  overflow-x: hidden;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-sizing: border-box;
+}
+
+.dashboard.shifted {
+  /* No margin - content will be positioned by dashboard-content */
+  background: #0D1117;
+}
+
+.dashboard:not(.shifted) {
+  /* No margin - content will be positioned by dashboard-content */
+  background: #0D1117;
+}
+
+/* Overlay for mobile drawer only */
+.drawer-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 2400;
+  animation: fadeIn 0.3s ease;
+  display: none; /* Hidden on desktop by default */
+  pointer-events: auto;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Show overlay only on mobile */
+@media (max-width: 768px) {
+  .drawer-overlay {
+    display: block;
+  }
+  
+  /* On mobile, sidebar overlays instead of shifting */
+  .dashboard.shifted,
+  .dashboard:not(.shifted) {
+    margin-left: 0;
+  }
+}
+
+/* Main Dashboard Content */
+.dashboard-content {
+  margin-top: 32px;
+  padding: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-sizing: border-box;
+  overflow-x: hidden !important;
+  overflow-y: auto;
+  min-height: calc(100vh - 32px);
+  position: relative;
+  width: 100%;
+  max-width: 100vw;
+}
+
+/* When sidebar is expanded (260px) - only for direct Dashboard children */
+.dashboard.shifted > .dashboard-content {
+  width: calc(100vw - 260px);
+  max-width: calc(100vw - 260px);
+  margin-left: 260px;
+}
+
+/* When sidebar is collapsed (70px) - only for direct Dashboard children */
+.dashboard:not(.shifted) > .dashboard-content {
+  width: calc(100vw - 70px);
+  max-width: calc(100vw - 70px);
+  margin-left: 70px;
+}
+
+.dashboard-content > * {
+  max-width: 100%;
+  box-sizing: border-box;
+  width: 100%;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+/* Prevent scrolling on dashboard-content when AI Doubt Solver is active */
+.dashboard-content:has(.ai-doubt-solver) {
+  overflow-y: hidden !important;
+  overflow-x: hidden !important;
+  height: calc(100vh - 70px) !important;
+  height: calc(100dvh - 70px) !important;
+}
+
+@media (max-width: 768px) {
+  .dashboard-content:has(.ai-doubt-solver) {
+    height: calc(100vh - 60px) !important;
+    height: calc(100dvh - 60px) !important;
+    margin-top: 60px !important;
+    padding: 0 !important;
+    overflow-y: hidden !important;
+    overflow-x: hidden !important;
+  }
+}
+
+/* Top-right points bar (moved from DashboardTopBar.css) */
+.top-right {
+  position: fixed;
+  top: 16px;
+  right: 24px;
+  z-index: 1800;
+}
+
+/* Hide points bar on mobile (shown in top bar instead) */
+@media (max-width: 768px) {
+  .top-right {
+    display: none;
+  }
+}
+.dashboard-top-bar {
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+  padding: 8px 14px;
+  font-size: 1rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 12px;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 6px 24px rgba(2,6,23,0.5);
+}
+.points-label {
+  color: #8be3ff;
+}
+.points-value {
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+  border-radius: 8px;
+  padding: 4px 12px;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+/* Points Bubble Animation - More visible position */
+.points-bubble-animation {
+  position: fixed;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #4ade80;
+  font-weight: 800;
+  font-size: 24px;
+  pointer-events: none;
+  z-index: 10000;
+  text-shadow: 
+    0 0 8px rgba(74, 222, 128, 0.7),
+    0 2px 6px rgba(0, 0, 0, 0.7);
+  animation: floatUpBubble 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  background: rgba(74, 222, 128, 0.15);
+  padding: 10px 18px;
+  border-radius: 12px;
+  border: 1px solid rgba(74, 222, 128, 0.4);
+  backdrop-filter: blur(8px);
+  box-shadow: 
+    0 6px 20px rgba(74, 222, 128, 0.35),
+    0 0 14px rgba(74, 222, 128, 0.25);
+}
+
+@keyframes floatUpBubble {
+  0% {
+    transform: translateX(-50%) translateY(10px) scale(0.85);
+    opacity: 0;
+  }
+  25% {
+    transform: translateX(-50%) translateY(-6px) scale(1.05);
+    opacity: 1;
+  }
+  60% {
+    transform: translateX(-50%) translateY(-22px) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-50%) translateY(-40px) scale(0.9);
+    opacity: 0;
+  }
+}
+
+/* Mobile: Adjust position for smaller screens */
+@media (max-width: 768px) {
+  .points-bubble-animation {
+    bottom: 90px;
+    font-size: 20px;
+    padding: 8px 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .points-bubble-animation {
+    bottom: 80px;
+    font-size: 18px;
+    padding: 6px 12px;
+  }
+}
+
+/* Polished card for main content */
+.sb-card {
+  background: #ffffff;
+  color: #1f2937;
+  border-radius: 10px;
+  padding: 18px;
+  box-shadow: 0 8px 30px rgba(2,6,23,0.35);
+  border: 1px solid rgba(15,23,42,0.06);
+}
+
+/* Tabs */
+.sb-tabs { display:flex; gap:18px; align-items:center; margin-bottom:12px; }
+.sb-tabs .tab { padding:8px 12px; border-radius:8px; cursor:pointer; color:#374151; }
+.sb-tabs .tab.active { background: linear-gradient(90deg,#e6f4ff,#eef7ff); color:#0b6fbf; font-weight:600; box-shadow:0 6px 18px rgba(11,111,191,0.08); }
+
+/* Primary button */
+.primary-btn {
+  background: linear-gradient(90deg,#2196f3,#1e88e5) !important;
+  color: white !important;
+  padding: 10px 18px !important;
+  border-radius: 8px !important;
+  border: none !important;
+  cursor: pointer !important;
+  font-weight: 600 !important;
+  box-shadow: 0 6px 18px rgba(30,136,229,0.18) !important;
+}
+.primary-btn.secondary { background: linear-gradient(90deg,#f3f4f6,#e5e7eb) !important; color:#111827 !important; }
+
+/* Toast notifications */
+.sb-toast { position: fixed; right: 24px; z-index: 5000; padding: 10px 14px; border-radius: 10px; color: #fff; box-shadow:0 8px 28px rgba(2,6,23,0.45); }
+.sb-toast.positive { background: linear-gradient(90deg,#06b6d4,#0ea5a4); }
+.sb-toast.note { background: linear-gradient(90deg,#111827,#374151); }
+
+/* Sidebar tweaks */
+.drawer-container { border-right: 1px solid rgba(255,255,255,0.03); }
+.drawer-links .tab-button { font-size:14px; color:#e6eef7; padding-left:6px; text-align:left; }
+.drawer-links .tab-button.active { background: rgba(255,255,255,0.04); border-radius:6px; padding:8px; }
+
+/* Thin scrollbars */
+.drawer-container, .dashboard-content, .quiz-history { scrollbar-width: thin; }
+.drawer-container::-webkit-scrollbar, .dashboard-content::-webkit-scrollbar, .quiz-history::-webkit-scrollbar { height:8px; width:8px; }
+.drawer-container::-webkit-scrollbar-thumb, .dashboard-content::-webkit-scrollbar-thumb, .quiz-history::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 6px; }
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .dashboard {
+    overflow-x: hidden;
+    width: 100vw;
+    max-width: 100vw;
+  }
+
+  /* On mobile, sidebar overlays instead of shifting */
+  .dashboard.shifted .dashboard-content,
+  .dashboard:not(.shifted) .dashboard-content {
+    width: 100% !important;
+    max-width: 100vw !important;
+    margin-left: 0 !important;
+    padding: 10px;
+    padding-bottom: 90px; /* Space for bottom nav + safe area */
+    overflow-x: hidden !important;
+  }
+
+  .drawer-container {
+    left: -260px;
+    width: 260px;
+    box-shadow: 4px 0 32px rgba(0, 0, 0, 0.5);
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .drawer-container.expanded {
+    left: 0;
+  }
+
+  .drawer-container.collapsed {
+    left: -260px;
+  }
+
+  .dashboard-content {
+    padding: 10px !important;
+    margin-top: 56px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .dashboard-content > * {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  .top-left {
+    top: 12px;
+    left: 12px;
+  }
+
+  .top-right {
+    top: 12px;
+    right: 12px;
+  }
+
+  .dashboard-top-bar {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+  }
+
+  .studybuddy-top-text {
+    font-size: 1.4rem;
+  }
+
+  .drawer-links {
+    gap: 0.25rem;
+  }
+
+  .tab-button {
+    font-size: 15px;
+    padding: 10px 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .drawer-container {
+    width: 100%;
+    left: -100%;
+  }
+
+  .drawer-container.expanded {
+    left: 0;
+  }
+
+  .dashboard.shifted .dashboard-content,
+  .dashboard:not(.shifted) .dashboard-content {
+    width: 100% !important;
+    max-width: 100vw !important;
+    margin-left: 0 !important;
+    padding: 10px !important;
+    padding-bottom: 85px !important; /* Space for bottom nav */
+    overflow-x: hidden !important;
+  }
+
+  .dashboard-content {
+    padding: 10px !important;
+    margin-top: 56px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .dashboard-content > * {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .top-left {
+    top: 10px;
+    left: 10px;
+  }
+
+  .top-right {
+    top: 10px;
+    right: 10px;
+  }
+
+  .dashboard-top-bar {
+    padding: 5px 10px;
+    font-size: 0.85rem;
+  }
+
+  .points-label {
+    font-size: 0.85rem;
+  }
+
+  .points-value {
+    padding: 3px 10px;
+    font-size: 0.85rem;
+  }
+}
+
+/* Safe area for notched devices */
+@supports (padding: max(0px)) {
+  @media (max-width: 768px) {
+    .dashboard-content {
+      padding-bottom: max(90px, calc(90px + env(safe-area-inset-bottom))) !important;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .dashboard-content {
+      padding-bottom: max(85px, calc(85px + env(safe-area-inset-bottom))) !important;
+    }
+  }
+}

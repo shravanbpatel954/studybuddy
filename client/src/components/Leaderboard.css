@@ -1,0 +1,146 @@
+/* ================= ROOT ================= */
+
+.sb-leaderboard {
+  padding: 14px;
+  background: #0b1220;
+  min-height: 100%;
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+/* ================= PODIUM ================= */
+
+.sb-podium {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.sb-podium-item {
+  background: #111827;
+  border-radius: 14px;
+  padding: 14px 8px;
+  text-align: center;
+  animation: riseUp 0.5s ease both;
+}
+
+.sb-podium-item img {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  margin-bottom: 6px;
+}
+
+.sb-rank {
+  font-size: 12px;
+  color: #94a3b8;
+  margin-bottom: 4px;
+}
+
+.sb-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #e5e7eb;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sb-score {
+  font-size: 12px;
+  color: #60a5fa;
+  margin-top: 2px;
+}
+
+/* 1st Rank Highlight */
+.p1 {
+  border: 1px solid #2563eb;
+  box-shadow: 0 0 12px rgba(37,99,235,0.5);
+}
+
+/* ================= LIST ================= */
+
+.sb-ranking-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sb-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: #111827;
+  border-radius: 12px;
+  animation: slideIn 0.35s ease both;
+}
+
+.sb-row img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+}
+
+.sb-pos {
+  width: 24px;
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+.sb-username {
+  flex: 1;
+  font-size: 14px;
+  color: #e5e7eb;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sb-username small {
+  color: #60a5fa;
+  font-size: 11px;
+  margin-left: 4px;
+}
+
+.sb-points {
+  font-size: 14px;
+  color: #60a5fa;
+  font-weight: 600;
+}
+
+/* ================= YOU HIGHLIGHT ================= */
+
+.sb-me {
+  background: linear-gradient(90deg, #2563eb, #1e40af);
+  box-shadow: 0 0 10px rgba(37,99,235,0.6);
+}
+
+/* ================= ANIMATIONS ================= */
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes riseUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0 }
+  to { opacity: 1 }
+}

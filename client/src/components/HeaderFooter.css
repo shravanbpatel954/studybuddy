@@ -1,0 +1,46 @@
+/* HEADER */
+.hf-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4px 12px;
+  background: #0f1217;
+  border-bottom: 1px solid #1f2937;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.hf-title {
+  color: #b9bfff;
+  font-size: 20px;
+}
+
+/* POINTS BOX */
+.hf-points-section {
+  padding: 10px 20px;
+}
+
+.hf-points-box {
+  background: #1e2230;
+  padding: 12px 16px;
+  border-radius: 10px;
+  width: fit-content;
+  color: white;
+}
+
+/* MAIN CONTENT */
+.hf-content {
+  padding: 8px 20px 80px; /* top trimmed to tighten vertical space */
+}
+
+/* MOBILE FOOTER - REMOVED (using MobileBottomNav instead) */
+.hf-footer {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  .hf-footer {
+    display: none !important;
+  }
+}
