@@ -1,8 +1,0 @@
-.confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center;z-index:3000}
-.confirm-card{background:white;color:#222;padding:20px;border-radius:10px;max-width:420px;width:90%;box-shadow:0 8px 30px rgba(0,0,0,0.25);text-align:left}
-.confirm-card h3{margin:0 0 8px}
-.confirm-card p{color:#444}
-.confirm-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:16px}
-.btn{padding:8px 12px;border-radius:8px;border:none;cursor:pointer}
-.btn-cancel{background:#f0f0f0}
-.btn-confirm{background:#00b894;color:white}
