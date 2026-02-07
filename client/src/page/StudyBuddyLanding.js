@@ -1,6 +1,7 @@
 import React from "react";
 import Navbar from "./navbar";
 import styles from "./StudyBuddyLanding.module.css";
+import { Link } from "react-router-dom";
 import { Upload, Brain, Zap, BookOpen } from "lucide-react";
 import { motion } from "framer-motion";
 
