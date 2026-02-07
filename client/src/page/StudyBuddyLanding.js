@@ -72,6 +72,9 @@ export default function StudyBuddyLanding() {
         >
           <a href="Login">Try StudyBuddy Now</a>
         </motion.button>
+           <Link to="/login">
+               <button className="sb-btn">Get Started</button>
+            </Link>
 
       </motion.section>
 
