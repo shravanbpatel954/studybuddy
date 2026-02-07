@@ -66,16 +66,16 @@ export default function StudyBuddyLanding() {
           leaderboard.
         </motion.p>
 
-        <motion.button
-          className={styles.btnGlow}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <a href="Login">Try StudyBuddy Now</a>
-        </motion.button>
-           <Link to="/login">
-               <button className="sb-btn">Get Started</button>
-            </Link>
+        <Link to="/login" className={styles.linkReset}>
+  <motion.button
+    className={styles.btnGlow}
+    whileHover={{ scale: 1.05 }}
+    whileTap={{ scale: 0.95 }}
+  >
+    Try StudyBuddy Now
+  </motion.button>
+</Link>
+
 
       </motion.section>
 
